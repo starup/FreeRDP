@@ -22,6 +22,11 @@
     _session = nil;
 }
 
+-(void) layoutSubviews {
+    [super layoutSubviews];
+    self.contentScaleFactor = 1;
+}
+
 - (void)drawRect:(CGRect)rect 
 {
 	if(_session != nil && [_session bitmapContext])
