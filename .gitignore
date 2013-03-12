@@ -86,3 +86,4 @@ default.log
 .svn
 client/Android/aVirtualApp
 client/vpush
+channels/appshell
