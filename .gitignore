@@ -82,3 +82,7 @@ Win32
 default.log
 *Amplifier XE*
 *Inspector XE*
+
+.svn
+client/Android/aVirtualApp
+client/vpush

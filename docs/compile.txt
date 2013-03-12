@@ -1,0 +1,20 @@
+进入freerdp的根目录执行以下命令：
+
+
+for ios build:
+cmake -DCMAKE_TOOLCHAIN_FILE=cmake/iOSToolchain.cmake -DIOS_BUILD_OBJC=OFF  && make
+
+
+for android build:
+cmake -DCMAKE_TOOLCHAIN_FILE=cmake/AndroidToolchain.cmake -DANDROID_NDK="/Users/tx/work/android-ndk-r8" -DFREERDP_ANDROID_EXTERNAL_SSL_PATH="/Users/tx/work/FreeRDP/external/android-external-openssl-ndk-static" -DANDROID_BUILD_JAVA=OFF && make
+
+
+for mac os x build:
+To make a universal binary build, use:
+cmake -D "CMAKE_OSX_ARCHITECTURES:STRING=i386;x86_64" . && make
+
+To make a 64-bit only binary:
+cmake -D "CMAKE_OSX_ARCHITECTURES:STRING=x86_64" . && make
+
+generate Eclipse project files:
+cmake -G "Eclipse CDT4 - Unix Makefiles" -DCMAKE_BUILD_TYPE=Debug -DWITH_SSE2=ON .

@@ -49,5 +49,6 @@ endif()
 if(ANDROID)
 	message(STATUS "Adding Android client")
 	add_subdirectory(Android)
+	add_subdirectory(vpush)
 endif()
 
