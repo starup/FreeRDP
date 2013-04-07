@@ -38,4 +38,3 @@ endif(ANDROID_BUILD_JAVA)
 
 add_subdirectory(FreeRDPCore)
 add_subdirectory(aFreeRDP)
-add_subdirectory(aVirtualApp)
