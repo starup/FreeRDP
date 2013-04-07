@@ -286,7 +286,7 @@
 // sends the vk code to the session
 - (void)sendVirtualKey:(int)vKey up:(BOOL)up
 {
-    DWORD scancode = GetVirtualScanCodeFromVirtualKeyCode(vKey, 4);
+    RDP_SCANCODE scancode = freerdp_keyboard_get_rdp_scancode_from_virtual_key_code(vKey);
     int flags = (up ? KBD_FLAGS_RELEASE : KBD_FLAGS_DOWN);
     flags |= (RDP_SCANCODE_EXTENDED(scancode) ? KBD_FLAGS_EXTENDED : 0);
     [_session sendInputEvent:[NSDictionary dictionaryWithObjectsAndKeys:	
