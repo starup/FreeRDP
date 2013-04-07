@@ -99,3 +99,7 @@ JNIEXPORT jstring JNICALL Java_com_freerdp_freerdpcore_services_LibFreeRDP_freer
 	return jni_freerdp_get_version(env, cls);
 }
 
+JNIEXPORT void JNICALL Java_com_freerdp_freerdpcore_services_LibFreeRDP_setVpassInfo(JNIEnv *env, jclass cls, jint instance, jstring resId, jstring commandLine, jstring rdpHostName, jint rdpHostPort, jint isVpn)
+{
+	return jni_freerdp_setVpassInfo(env, cls, instance, resId, commandLine, rdpHostName, rdpHostPort, isVpn);
+}

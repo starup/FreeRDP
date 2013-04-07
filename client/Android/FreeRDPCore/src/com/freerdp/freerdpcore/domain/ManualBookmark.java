@@ -17,12 +17,54 @@ public class ManualBookmark extends BookmarkBase
 {
 	private String hostname;
 	private int port;
+	
+	//vpass external info
+	private String resId;
+	private String commandLine;
+	private String rdpHostName;
+	private int rdpHostPort;
+	private int isVpn;
+	
+	public String getResId() {
+		return resId;
+	}
+	public void setResId(String resId) {
+		this.resId = resId;
+	}
+	public String getCommandLine() {
+		return commandLine;
+	}
+	public void setCommandLine(String commandLine) {
+		this.commandLine = commandLine;
+	}
+	public String getRdpHostName() {
+		return rdpHostName;
+	}
+	public void setRdpHostName(String rdpHostName) {
+		this.rdpHostName = rdpHostName;
+	}
+	public int getRdpHostPort() {
+		return rdpHostPort;
+	}
+	public void setRdpHostPort(int rdpHostPort) {
+		this.rdpHostPort = rdpHostPort;
+	}
+	public int getIsVpn() {
+		return isVpn;
+	}
+	public void setIsVpn(int isVpn) {
+		this.isVpn = isVpn;
+	}
 
 	private void init()
 	{
 		type = TYPE_MANUAL;
 		hostname = "";
-		port = 3389;		
+		port = 3389;
+		
+		resId = "";
+		commandLine = "";
+		rdpHostName = "";
 	}
 	
 	public ManualBookmark(Parcel parcel)
@@ -30,7 +72,14 @@ public class ManualBookmark extends BookmarkBase
 		super(parcel);
 		type = TYPE_MANUAL;
 		hostname = parcel.readString();
-		port = parcel.readInt();		
+		port = parcel.readInt();	
+		
+		//vpass
+		resId = parcel.readString();
+		commandLine = parcel.readString();
+		rdpHostName = parcel.readString();
+		rdpHostPort = parcel.readInt();
+		isVpn = parcel.readInt();
 	}
 
 	public ManualBookmark() {
@@ -77,6 +126,13 @@ public class ManualBookmark extends BookmarkBase
 		super.writeToParcel(out, flags);
 		out.writeString(hostname);
 		out.writeInt(port);
+		
+		//vpass
+		out.writeString(resId);
+		out.writeString(commandLine);
+		out.writeString(rdpHostName);
+		out.writeInt(rdpHostPort);
+		out.writeInt(isVpn);
 	}
 
 	@Override

@@ -975,6 +975,14 @@ struct rdp_settings
 	/* Extensions */
 	ALIGN64 int num_extensions; /*  */
 	ALIGN64 struct rdp_ext_set extensions[16]; /*  */
+
+	// vpass Extensions
+	ALIGN64 char* resId;
+	ALIGN64 char* commandLine;
+	ALIGN64 char* rdpHostname;
+	ALIGN64 UINT32 rdpHostPort;
+	ALIGN64 BOOL isVpn;
+
 };
 typedef struct rdp_settings rdpSettings;
 

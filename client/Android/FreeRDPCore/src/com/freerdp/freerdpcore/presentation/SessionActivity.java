@@ -538,7 +538,7 @@ public class SessionActivity extends Activity
 		modifiersKeyboardView.setKeyboard(modifiersKeyboard);
 	}
 	
-	private void processIntent(Intent intent)
+	protected void processIntent(Intent intent)
 	{
 		// get either session instance or create one from a bookmark
 		Bundle bundle = intent.getExtras();		
@@ -578,7 +578,7 @@ public class SessionActivity extends Activity
 		}
 	}
 	
-	private void connect(BookmarkBase bookmark)
+	protected void connect(BookmarkBase bookmark)
 	{		
 		session = GlobalApp.createSession(bookmark);
 		session.setUIEventListener(this);

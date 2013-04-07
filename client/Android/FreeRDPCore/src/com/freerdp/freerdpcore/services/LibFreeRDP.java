@@ -48,6 +48,9 @@ public class LibFreeRDP
 
 	private static native String freerdp_get_version();
 	
+	//vpass native set info
+	private static native void setVpassInfo(int inst, String resId, String commandLine, String rdpHostName, int rdpHostPort, int isVpn);
+	
 	private static final String TAG = "LibFreeRDP";
 
 	public static interface EventListener
@@ -142,7 +145,11 @@ public class LibFreeRDP
 		
 		BookmarkBase.AdvancedSettings advancedSettings = bookmark.getAdvancedSettings();
 		freerdp_set_advanced_settings(inst, advancedSettings.getRemoteProgram(), advancedSettings.getWorkDir());
-
+		
+		//vpass setVpassInfo
+		ManualBookmark manualBookMark = bookmark.<ManualBookmark> get();
+		setVpassInfo(inst, manualBookMark.getResId(), manualBookMark.getCommandLine(),manualBookMark.getRdpHostName(),
+				manualBookMark.getRdpHostPort(), manualBookMark.getIsVpn());
 		return true;
 	}
 	

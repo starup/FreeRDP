@@ -19,7 +19,7 @@
 set(IOS_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 set(IOS_PACKAGE_NAME "iFreeRDP")
 
-CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/iFreeRDP.xcodeproj/project.pbxproj.cmake ${CMAKE_CURRENT_SOURCE_DIR}/iFreeRDP.xcodeproj/project.pbxproj @ONLY)
+#CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/iFreeRDP.xcodeproj/project.pbxproj.cmake ${CMAKE_CURRENT_SOURCE_DIR}/iFreeRDP.xcodeproj/project.pbxproj @ONLY)
 
 if(IOS_BUILD_OBJC)
 	# And isn't shiped with the android ndk/sdk so

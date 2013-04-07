@@ -20,6 +20,7 @@
 #include <sys/select.h>
 #include <freerdp/codec/rfx.h>
 #include <freerdp/channels/channels.h>
+#include <freerdp/client/channels.h>
 #include <freerdp/gdi/gdi.h>
 #include <freerdp/utils/event.h>
 #include <freerdp/constants.h>
@@ -93,6 +94,8 @@ BOOL android_pre_connect(freerdp* instance)
 
 	rdpSettings* settings = instance->settings;
 	BOOL bitmap_cache = settings->BitmapCacheEnabled;
+    settings->CompressionEnabled = TRUE;
+
 	settings->OrderSupport[NEG_DSTBLT_INDEX] = TRUE;
 	settings->OrderSupport[NEG_PATBLT_INDEX] = TRUE;
 	settings->OrderSupport[NEG_SCRBLT_INDEX] = TRUE;
@@ -120,9 +123,12 @@ BOOL android_pre_connect(freerdp* instance)
 
 	settings->FrameAcknowledge = 10;
 
-	freerdp_channels_load_plugin(instance->context->channels, instance->settings, "tsxlc", NULL);
+    freerdp_register_addin_provider(freerdp_channels_load_static_addin_entry, 0);
+    freerdp_channels_load_plugin(instance->context->channels, instance->settings, "appshell", instance->settings);
 
 	freerdp_channels_pre_connect(instance->context->channels, instance);
+
+	printf("android_pre_connect!\n");
 
 	return TRUE;
 }
@@ -451,6 +457,7 @@ void* android_thread_func(void* param)
 
 	pthread_detach(pthread_self());
 
+
 	return NULL;
 }
 
@@ -462,8 +469,6 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved)
 	jint res = init_callback_environment(vm);
 
 	setlocale(LC_ALL, "");
-
-	freerdp_channels_global_init();
 
 	return res;
 }
@@ -838,5 +843,30 @@ JNIEXPORT void JNICALL jni_freerdp_send_cursor_event(
 JNIEXPORT jstring JNICALL jni_freerdp_get_version(JNIEnv *env, jclass cls)
 {
 	return (*env)->NewStringUTF(env, GIT_REVISION);
+}
+
+//vpass
+JNIEXPORT void jni_freerdp_setVpassInfo(JNIEnv *env, jclass cls, jint instance, jstring resId,
+		jstring commandLine, jstring rdpHostName, jint rdpHostPort, jint isVpn)
+{
+	freerdp* inst = (freerdp*)instance;
+	rdpSettings * settings = inst->settings;
+	settings->isVpn = isVpn;
+
+	const jbyte *csResId = (*env)->GetStringUTFChars(env, resId, NULL );
+	settings->resId = strdup(csResId);
+	(*env)->ReleaseStringUTFChars(env, resId, csResId);
+
+	const jbyte *csCommandLine = (*env)->GetStringUTFChars(env, commandLine, NULL );
+	settings->commandLine = strdup(csCommandLine);
+	(*env)->ReleaseStringUTFChars(env, commandLine, csCommandLine);
+
+	if (isVpn)
+	{
+		const jbyte *csRdpHostName = (*env)->GetStringUTFChars(env, rdpHostName, NULL );
+		settings->rdpHostname = strdup(csRdpHostName);
+		settings->rdpHostPort = rdpHostPort;
+		(*env)->ReleaseStringUTFChars(env, rdpHostName, csRdpHostName);
+	}
 }
 
