@@ -115,11 +115,11 @@ void tcp_get_mac_address(rdpTcp * tcp)
 		mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]); */
 }
 
+
 BOOL tcp_connect(rdpTcp* tcp, const char* hostname, UINT16 port)
 {
 	UINT32 option_value;
 	socklen_t option_len;
-
 	if (hostname[0] == '/')
 	{
 		tcp->sockfd = freerdp_uds_connect(hostname);
@@ -153,6 +153,19 @@ BOOL tcp_connect(rdpTcp* tcp, const char* hostname, UINT16 port)
 		}
 
 		tcp_set_keep_alive_mode(tcp);
+	}
+
+	//vpass vpn send packet
+	if (tcp->settings->isVpn){
+		char *rdpHostName = tcp->settings->rdpHostname;
+		int rdpHostPort = tcp->settings->rdpHostPort;
+		unsigned char szBuffer[256] = {0};
+		memset(szBuffer,0,sizeof(szBuffer));
+		memcpy(szBuffer,"vpass",5);
+		*((uint32_t *)&szBuffer[5]) = inet_addr(rdpHostName);
+		*((uint32_t *)&szBuffer[9])  = rdpHostPort;
+		int iResult = send(tcp->sockfd, szBuffer, 11,0);
+		printf("send vpn packet header iResult=%d\n",iResult);
 	}
 
 	return TRUE;
