@@ -545,7 +545,7 @@ MRDPRailView* g_mrdpRailView;
 - (void) keyDown:(NSEvent *) event
 {
 	int key;
-	BOOL extended;
+	USHORT extended;
 	DWORD vkcode;
 	DWORD scancode;
 	
@@ -565,7 +565,7 @@ MRDPRailView* g_mrdpRailView;
 - (void) keyUp:(NSEvent *) event
 {
 	int key;
-	BOOL extended;
+	USHORT extended;
 	DWORD vkcode;
 	DWORD scancode;
 	
@@ -573,7 +573,7 @@ MRDPRailView* g_mrdpRailView;
 	
 	vkcode = GetVirtualKeyCodeFromKeycode(key, KEYCODE_TYPE_APPLE);
 	scancode = GetVirtualScanCodeFromVirtualKeyCode(vkcode, 4);
-	extended = (scancode & KBDEXT) ? KBDEXT : 0;
+	extended = (scancode & KBDEXT) ? TRUE : FALSE;
 	
 	rdp_instance->input->KeyboardEvent(rdp_instance->input, extended | KBD_FLAGS_RELEASE, scancode & 0xFF);
 }
@@ -778,7 +778,7 @@ MRDPRailView* g_mrdpRailView;
 	
 	apple_to_windowMove(&r, &windowMove);
 	windowMove.windowId = self->savedWindowId;
-	mac_send_rail_client_event(self->context->channels, RDP_EVENT_TYPE_RAIL_CLIENT_WINDOW_MOVE, &windowMove);
+	mac_send_rail_client_event(self->context->channels, RailChannel_ClientWindowMove, &windowMove);
 }
 
 /**
@@ -800,7 +800,7 @@ MRDPRailView* g_mrdpRailView;
 	
 	apple_to_windowMove(&r, &windowMove);
 	windowMove.windowId = self->savedWindowId;
-	mac_send_rail_client_event(self->context->channels, RDP_EVENT_TYPE_RAIL_CLIENT_WINDOW_MOVE, &windowMove);
+	mac_send_rail_client_event(self->context->channels, RailChannel_ClientWindowMove, &windowMove);
 }
 
 /**
@@ -923,7 +923,7 @@ void mac_rail_send_activate(int window_id)
 	activate.windowId = window_id;
 	activate.enabled = 1;
 	
-	mac_send_rail_client_event(g_mrdpRailView->context->channels, RDP_EVENT_TYPE_RAIL_CLIENT_ACTIVATE, &activate);
+	mac_send_rail_client_event(g_mrdpRailView->context->channels, RailChannel_ClientActivate, &activate);
 }
 
 @end

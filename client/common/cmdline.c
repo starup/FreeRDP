@@ -85,6 +85,7 @@ COMMAND_LINE_ARGUMENT_A args[] =
 	{ "smartcard", COMMAND_LINE_VALUE_REQUIRED, NULL, NULL, NULL, -1, NULL, "Redirect smartcard device" },
 	{ "printer", COMMAND_LINE_VALUE_REQUIRED, NULL, NULL, NULL, -1, NULL, "Redirect printer device" },
 	{ "usb", COMMAND_LINE_VALUE_REQUIRED, NULL, NULL, NULL, -1, NULL, "Redirect USB device" },
+	{ "echo", COMMAND_LINE_VALUE_FLAG, NULL, NULL, NULL, -1, "echo", "Echo channel" },
 	{ "fonts", COMMAND_LINE_VALUE_BOOL, NULL, BoolValueFalse, NULL, -1, NULL, "Smooth fonts (ClearType)" },
 	{ "aero", COMMAND_LINE_VALUE_BOOL, NULL, NULL, BoolValueFalse, -1, NULL, "Desktop composition" },
 	{ "window-drag", COMMAND_LINE_VALUE_BOOL, NULL, BoolValueFalse, NULL, -1, NULL, "Full window drag" },
@@ -122,7 +123,9 @@ COMMAND_LINE_ARGUMENT_A args[] =
 	{ "fast-path", COMMAND_LINE_VALUE_BOOL, NULL, BoolValueTrue, NULL, -1, NULL, "fast-path input/output" },
 	{ "async-input", COMMAND_LINE_VALUE_BOOL, NULL, BoolValueFalse, NULL, -1, NULL, "asynchronous input" },
 	{ "async-update", COMMAND_LINE_VALUE_BOOL, NULL, BoolValueFalse, NULL, -1, NULL, "asynchronous update" },
+	{ "async-transport", COMMAND_LINE_VALUE_BOOL, NULL, BoolValueFalse, NULL, -1, NULL, "asynchronous transport (unstable)" },
 	{ "async-channels", COMMAND_LINE_VALUE_BOOL, NULL, BoolValueFalse, NULL, -1, NULL, "asynchronous channels (unstable)" },
+	{ "wm-class", COMMAND_LINE_VALUE_REQUIRED, "<class name>", NULL, NULL, -1, NULL, "set the WM_CLASS hint for the window instance" },
 	{ "version", COMMAND_LINE_VALUE_FLAG | COMMAND_LINE_PRINT_VERSION, NULL, NULL, NULL, -1, NULL, "print version" },
 	{ "help", COMMAND_LINE_VALUE_FLAG | COMMAND_LINE_PRINT_HELP, NULL, NULL, NULL, -1, "?", "print help" },
 	{ NULL, 0, NULL, NULL, NULL, -1, NULL, NULL }
@@ -561,6 +564,16 @@ int freerdp_client_command_line_post_filter(void* context, COMMAND_LINE_ARGUMENT
 
 		free(p);
 	}
+	CommandLineSwitchCase(arg, "echo")
+	{
+		char* p[1];
+		int count;
+
+		count = 1;
+		p[0] = "echo";
+
+		freerdp_client_add_dynamic_channel(settings, count, p);
+	}
 	CommandLineSwitchCase(arg, "sound")
 	{
 		if (arg->Flags & COMMAND_LINE_VALUE_PRESENT)
@@ -920,7 +933,7 @@ int freerdp_client_parse_command_line_arguments(int argc, char** argv, rdpSettin
 
 	if (compatibility)
 	{
-		printf("WARNING: Using deprecated command-line interface!\n");
+		fprintf(stderr, "WARNING: Using deprecated command-line interface!\n");
 		return freerdp_client_parse_old_command_line_arguments(argc, argv, settings);
 	}
 	else
@@ -952,19 +965,19 @@ int freerdp_client_parse_command_line_arguments(int argc, char** argv, rdpSettin
 			layouts = freerdp_keyboard_get_layouts(RDP_KEYBOARD_LAYOUT_TYPE_STANDARD);
 			printf("\nKeyboard Layouts\n");
 			for (i = 0; layouts[i].code; i++)
-				printf("0x%08X\t%s\n", layouts[i].code, layouts[i].name);
+				printf("0x%08lX\t%s\n", layouts[i].code, layouts[i].name);
 			free(layouts);
 
 			layouts = freerdp_keyboard_get_layouts(RDP_KEYBOARD_LAYOUT_TYPE_VARIANT);
 			printf("\nKeyboard Layout Variants\n");
 			for (i = 0; layouts[i].code; i++)
-				printf("0x%08X\t%s\n", layouts[i].code, layouts[i].name);
+				printf("0x%08lX\t%s\n", layouts[i].code, layouts[i].name);
 			free(layouts);
 
 			layouts = freerdp_keyboard_get_layouts(RDP_KEYBOARD_LAYOUT_TYPE_IME);
 			printf("\nKeyboard Input Method Editors (IMEs)\n");
 			for (i = 0; layouts[i].code; i++)
-				printf("0x%08X\t%s\n", layouts[i].code, layouts[i].name);
+				printf("0x%08lX\t%s\n", layouts[i].code, layouts[i].name);
 			free(layouts);
 
 			printf("\n");
@@ -975,9 +988,9 @@ int freerdp_client_parse_command_line_arguments(int argc, char** argv, rdpSettin
 
 	arg = CommandLineFindArgumentA(args, "v");
 
-	if (!(arg->Flags & COMMAND_LINE_VALUE_PRESENT))
+	if (!settings->ConnectionFile && !(arg->Flags & COMMAND_LINE_VALUE_PRESENT))
 	{
-		printf("error: server hostname was not specified with /v:<server>[:port]\n");
+		fprintf(stderr, "error: server hostname was not specified with /v:<server>[:port]\n");
 		return COMMAND_LINE_ERROR_MISSING_ARGUMENT;
 	}
 
@@ -1101,7 +1114,7 @@ int freerdp_client_parse_command_line_arguments(int argc, char** argv, rdpSettin
 
 				if (!id)
 				{
-					printf("Could not identify keyboard layout: %s\n", arg->Value);
+					fprintf(stderr, "Could not identify keyboard layout: %s\n", arg->Value);
 				}
 			}
 
@@ -1400,7 +1413,7 @@ int freerdp_client_parse_command_line_arguments(int argc, char** argv, rdpSettin
 			}
 			else
 			{
-				printf("unknown protocol security: %s\n", arg->Value);
+				fprintf(stderr, "unknown protocol security: %s\n", arg->Value);
 			}
 		}
 		CommandLineSwitchCase(arg, "sec-rdp")
@@ -1500,6 +1513,14 @@ int freerdp_client_parse_command_line_arguments(int argc, char** argv, rdpSettin
 		{
 			settings->AsyncChannels = arg->Value ? TRUE : FALSE;
 		}
+		CommandLineSwitchCase(arg, "async-transport")
+		{
+			settings->AsyncTransport = arg->Value ? TRUE : FALSE;
+		}
+		CommandLineSwitchCase(arg, "wm-class")
+		{
+			settings->WmClass = _strdup(arg->Value);
+		}
 		CommandLineSwitchDefault(arg)
 		{
 
@@ -1571,7 +1592,7 @@ int freerdp_client_load_static_channel_addin(rdpChannels* channels, rdpSettings*
 	{
 		if (freerdp_channels_client_load(channels, settings, entry, data) == 0)
 		{
-			printf("loading channel %s\n", name);
+			fprintf(stderr, "loading channel %s\n", name);
 			return 0;
 		}
 	}

@@ -1,8 +1,10 @@
 /**
  * FreeRDP: A Remote Desktop Protocol Implementation
- * String Utils
+ * Windows Client
  *
- * Copyright 2011 Marc-Andre Moreau <marcandre.moreau@gmail.com>
+ * Copyright 2009-2011 Jay Sorg
+ * Copyright 2010-2011 Vic Lee
+ * Copyright 2010-2011 Marc-Andre Moreau <marcandre.moreau@gmail.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,30 +19,9 @@
  * limitations under the License.
  */
 
-#ifndef FREERDP_UTILS_STRING_H
-#define FREERDP_UTILS_STRING_H
+#ifndef __WFREERDP_H
+#define __WFREERDP_H
 
-#include <freerdp/api.h>
-#include <freerdp/types.h>
-#include <freerdp/utils/stream.h>
+#include "wf_interface.h"
 
-struct rdp_string
-{
-	char* ascii;
-	char* unicode;
-	UINT32 length;
-};
-typedef struct rdp_string rdpString;
-
-#ifdef __cplusplus
-extern "C" {
 #endif
-
-FREERDP_API BOOL freerdp_string_read_length32(STREAM* s, rdpString* string);
-FREERDP_API void freerdp_string_free(rdpString* string);
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* FREERDP_UTILS_STRING_H */

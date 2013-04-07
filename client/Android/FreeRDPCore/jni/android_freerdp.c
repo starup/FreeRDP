@@ -25,7 +25,6 @@
 #include <freerdp/utils/event.h>
 #include <freerdp/constants.h>
 #include <freerdp/locale/keyboard.h>
-#include <freerdp/utils/file.h>
 
 #include <android/bitmap.h>
 #include <machine/cpu-features.h>
@@ -315,7 +314,7 @@ int android_receive_channel_data(freerdp* instance, int channelId, UINT8* data, 
 
 void android_process_channel_event(rdpChannels* channels, freerdp* instance)
 {
-	RDP_EVENT* event;
+	wMessage* event;
 
 	event = freerdp_channels_pop_event(channels);
 
@@ -323,7 +322,7 @@ void android_process_channel_event(rdpChannels* channels, freerdp* instance)
 	{
 /*		switch (event->event_class)
 		{
-			case RDP_EVENT_CLASS_RAIL:
+			case RailChannel_Class:
 				xf_process_rail_event(ai, chanman, event);
 				break;
 
@@ -538,11 +537,17 @@ JNIEXPORT void JNICALL jni_freerdp_set_data_directory(JNIEnv *env, jclass cls, j
 	rdpSettings * settings = inst->settings;
 
 	const jbyte *directory = (*env)->GetStringUTFChars(env, jdirectory, NULL);
+
 	free(settings->HomePath);
 	free(settings->ConfigPath);
+
+	int config_dir_len = strlen(directory) + 10; /* +9 chars for /.freerdp and +1 for \0 */
+	char* config_dir_buf = (char*)malloc(config_dir_len);
+	strcpy(config_dir_buf, directory);
+	strcat(config_dir_buf, "/.freerdp");
 	settings->HomePath = strdup(directory);
-	settings->ConfigPath = NULL;
-	freerdp_detect_paths(settings);
+	settings->ConfigPath = config_dir_buf;	/* will be freed by freerdp library */
+
 	(*env)->ReleaseStringUTFChars(env, jdirectory, directory);
 }
 
@@ -601,6 +606,7 @@ JNIEXPORT void JNICALL jni_freerdp_set_connection_info(JNIEnv *env, jclass cls, 
 
 	/* enable NSCodec */
 	settings->NSCodec = TRUE;
+	settings->BitmapCacheV3Enabled = TRUE;
 
 	switch ((int) security)
 	{

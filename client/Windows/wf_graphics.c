@@ -26,8 +26,6 @@
 #include "wf_gdi.h"
 #include "wf_graphics.h"
 
-extern HINSTANCE g_hInstance; /* in wfreerdp.c */
-
 HBITMAP wf_create_dib(wfInfo* wfi, int width, int height, int bpp, BYTE* data, BYTE** pdata)
 {
 	HDC hdc;
@@ -163,7 +161,7 @@ void wf_Bitmap_Decompress(rdpContext* context, rdpBitmap* bitmap,
 
 		if (status != TRUE)
 		{
-			printf("Bitmap Decompression Failed\n");
+			fprintf(stderr, "Bitmap Decompression Failed\n");
 		}
 	}
 	else

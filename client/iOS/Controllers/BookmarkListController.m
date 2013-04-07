@@ -59,7 +59,7 @@
                 
         // set title and tabbar controller image
         [self setTitle:NSLocalizedString(@"Connections", @"'Connections': bookmark controller title")];
-        [self setTabBarItem:[[UITabBarItem alloc] initWithTabBarSystemItem:UITabBarSystemItemBookmarks tag:0]];
+        [self setTabBarItem:[[[UITabBarItem alloc] initWithTabBarSystemItem:UITabBarSystemItemBookmarks tag:0] autorelease]];
 
         // load images
         _star_on_img = [[UIImage imageWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"icon_accessory_star_on" ofType:@"png"]] retain];
@@ -151,6 +151,9 @@
 	[_manual_search_result release];
     [_manual_bookmarks release];
     [_tsxconnect_bookmarks release];
+    
+    [_star_on_img release];
+    [_star_off_img release];
 
     [super dealloc];
 }
@@ -451,7 +454,7 @@
     {
         // resume session
         RDPSession* session = [_active_sessions objectAtIndex:[indexPath row]];
-        UIViewController* ctrl = [[RDPSessionViewController alloc] initWithNibName:@"RDPSessionView" bundle:nil session:session];
+        UIViewController* ctrl = [[[RDPSessionViewController alloc] initWithNibName:@"RDPSessionView" bundle:nil session:session] autorelease];
         [ctrl setHidesBottomBarWhenPushed:YES];
         [[self navigationController] pushViewController:ctrl animated:YES];
     }
@@ -466,7 +469,8 @@
                 if ([[_searchBar text] length] == 0)
                 {                    
                     // show add bookmark controller
-                    BookmarkEditorController* bookmarkEditorController = [[[BookmarkEditorController alloc] initWithBookmark:[[ComputerBookmark alloc] initWithBaseDefaultParameters]] autorelease];
+                    ComputerBookmark *bookmark = [[[ComputerBookmark alloc] initWithBaseDefaultParameters] autorelease];
+                    BookmarkEditorController* bookmarkEditorController = [[[BookmarkEditorController alloc] initWithBookmark:bookmark] autorelease];
                     [bookmarkEditorController setTitle:NSLocalizedString(@"Add Connection", @"Add Connection title")];
                     [bookmarkEditorController setDelegate:self];
                     [bookmarkEditorController setHidesBottomBarWhenPushed:YES];
@@ -509,7 +513,7 @@
 		{	            
 			// create rdp session
             RDPSession* session = [[[RDPSession alloc] initWithBookmark:bookmark] autorelease];
-            UIViewController* ctrl = [[RDPSessionViewController alloc] initWithNibName:@"RDPSessionView" bundle:nil session:session];
+            UIViewController* ctrl = [[[RDPSessionViewController alloc] initWithNibName:@"RDPSessionView" bundle:nil session:session] autorelease];
             [ctrl setHidesBottomBarWhenPushed:YES];
             [[self navigationController] pushViewController:ctrl animated:YES];
             [_active_sessions addObject:session];
@@ -676,10 +680,20 @@
 
 - (void)commitBookmark:(ComputerBookmark *)bookmark
 {
-    // if we got a manual bookmark that is not in the list yet - add it
-    if (![_manual_bookmarks containsObject:bookmark])
+    // if we got a manual bookmark that is not in the list yet - add it otherwise replace it
+    BOOL found = NO;
+    for (int idx = 0; idx < [_manual_bookmarks count]; ++idx)
+    {
+        if ([[bookmark uuid] isEqualToString:[[_manual_bookmarks objectAtIndex:idx] uuid]])
+        {
+            [_manual_bookmarks replaceObjectAtIndex:idx withObject:bookmark];
+            found = YES;
+            break;
+        }
+    }
+    if (!found)
         [_manual_bookmarks addObject:bookmark];
-        
+    
     // remove any quick connect history entry with the same hostname
     NSString* hostname = [[bookmark params] StringForKey:@"hostname"];
     if ([_connection_history containsObject:hostname])

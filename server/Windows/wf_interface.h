@@ -42,7 +42,7 @@ typedef struct wf_peer_context wfPeerContext;
 
 struct wf_info
 {
-	STREAM* s;
+	wStream* s;
 
 	//screen and monitor info
 	int screenID;
@@ -70,6 +70,7 @@ struct wf_info
 
 	HANDLE snd_mutex;
 	BOOL snd_stop;
+	AUDIO_FORMAT* agreed_format;
 
 	RECT invalid;
 	HANDLE mutex;
