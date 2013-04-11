@@ -95,3 +95,5 @@ default.log
 client/Android/aVirtualApp
 client/vpush
 channels/appshell
+
+include/freerdp/client/appshell.h

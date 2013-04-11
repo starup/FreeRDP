@@ -21,6 +21,7 @@
 #include <freerdp/codec/rfx.h>
 #include <freerdp/channels/channels.h>
 #include <freerdp/client/channels.h>
+#include <freerdp/client/appshell.h>
 #include <freerdp/gdi/gdi.h>
 #include <freerdp/utils/event.h>
 #include <freerdp/constants.h>
@@ -123,6 +124,7 @@ BOOL android_pre_connect(freerdp* instance)
 	settings->FrameAcknowledge = 10;
 
     freerdp_register_addin_provider(freerdp_channels_load_static_addin_entry, 0);
+    printf("instance=%d,cmdline=%s\n",instance,instance->settings->commandLine);
     freerdp_channels_load_plugin(instance->context->channels, instance->settings, "appshell", instance->settings);
 
 	freerdp_channels_pre_connect(instance->context->channels, instance);
@@ -320,25 +322,15 @@ void android_process_channel_event(rdpChannels* channels, freerdp* instance)
 
 	if (event)
 	{
-/*		switch (event->event_class)
+		switch (GetMessageClass(event->id))
 		{
-			case RailChannel_Class:
-				xf_process_rail_event(ai, chanman, event);
+			case AppshellChannel_Class:
+				printf("android_process_channel_event--AppshellChannel_Class\n");
 				break;
 
 			default:
 				break;
 		}
-
-		switch (event->event_type)
-		{
-			case RDP_EVENT_TYPE_CB_SYNC:
-				android_process_cb_sync_event(chanman, instance);
-				break;
-			default:
-				break;
-		}
-*/
 		freerdp_event_free(event);
 	}
 }
@@ -475,7 +467,7 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved)
 JNIEXPORT jint JNICALL jni_freerdp_new(JNIEnv *env, jclass cls)
 {
 	freerdp* instance;
-
+	freerdp_channels_global_init();
 	// create instance
 	instance = freerdp_new();
 	instance->PreConnect = android_pre_connect;
@@ -499,6 +491,7 @@ JNIEXPORT void JNICALL jni_freerdp_free(JNIEnv *env, jclass cls, jint instance)
 {
 	freerdp* inst = (freerdp*)instance;
 	freerdp_free(inst);
+	freerdp_channels_global_uninit();
 }
 
 JNIEXPORT jboolean JNICALL jni_freerdp_connect(JNIEnv *env, jclass cls, jint instance)
@@ -874,5 +867,15 @@ JNIEXPORT void jni_freerdp_setVpassInfo(JNIEnv *env, jclass cls, jint instance, 
 		settings->rdpHostPort = rdpHostPort;
 		(*env)->ReleaseStringUTFChars(env, rdpHostName, csRdpHostName);
 	}
+}
+
+JNIEXPORT void JNICALL jni_freerdp_startVirtualApp(JNIEnv *env, jclass cls, jint instance)
+{
+	RDP_APPSHELL_START_APP_EVENT* event;
+	freerdp* inst = (freerdp*)instance;
+	event = (RDP_APPSHELL_START_APP_EVENT*) freerdp_event_new(AppshellChannel_Class,
+			AppshellChannel_StartApp, NULL, NULL);
+//	android_push_event(inst, event);
+	freerdp_channels_send_event(inst->context->channels, (wMessage*) event);
 }
 

@@ -324,5 +324,8 @@
 #define FREERDP_RAIL_CHANNEL_CLIENT_GET_APP_ID_REQUEST		MakeMessageId(RailChannel, ClientGetAppIdRequest)
 #define FREERDP_RAIL_CHANNEL_SERVER_GET_APP_ID_RESPONSE		MakeMessageId(RailChannel, ServerGetAppIdResponse)
 
+#define AppshellChannel_Class					(Channel_Base + 5)
+#define AppshellChannel_StartApp				1
+
 #endif /* FREERDP_CORE_MESSAGE_H */
 
