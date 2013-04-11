@@ -287,7 +287,7 @@ public class SessionActivity extends Activity
 	private static final int SCROLLING_DISTANCE = 20;
 
 	private Bitmap bitmap;
-	protected SessionState session;
+	private SessionState session;
 	private SessionView sessionView;
 	private TouchPointerView touchPointerView;
 	private ProgressDialog progressDialog;

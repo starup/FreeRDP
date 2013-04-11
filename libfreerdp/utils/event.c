@@ -32,7 +32,6 @@
 #include <freerdp/client/cliprdr.h>
 #include <freerdp/client/tsmf.h>
 #include <freerdp/rail.h>
-#include <freerdp/client/appshell.h>
 
 static wMessage* freerdp_cliprdr_event_new(UINT16 event_type)
 {
@@ -98,23 +97,6 @@ static wMessage* freerdp_rail_event_new(UINT16 event_type)
 	return event;
 }
 
-static wMessage* freerdp_appshell_event_new(UINT16 event_type)
-{
-	wMessage* event = NULL;
-
-	switch (event_type)
-	{
-		case AppshellChannel_StartApp:
-			event = (wMessage*) malloc(sizeof(RDP_APPSHELL_START_APP_EVENT));
-			ZeroMemory(event, sizeof(RDP_APPSHELL_START_APP_EVENT));
-			event->id = MakeMessageId(AppshellChannel, StartApp);
-			break;
-	}
-
-	return event;
-}
-
-
 wMessage* freerdp_event_new(UINT16 event_class, UINT16 event_type,
 	MESSAGE_FREE_FN on_event_free_callback, void* user_data)
 {
@@ -137,9 +119,6 @@ wMessage* freerdp_event_new(UINT16 event_class, UINT16 event_type,
 
 		case RailChannel_Class:
 			event = freerdp_rail_event_new(event_type);
-			break;
-		case AppshellChannel_Class:
-			event = freerdp_appshell_event_new(event_type);
 			break;
 	}
 

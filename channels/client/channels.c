@@ -829,10 +829,6 @@ FREERDP_API int freerdp_channels_send_event(rdpChannels* channels, wMessage* eve
 		case RailChannel_Class:
 			name = "rail";
 			break;
-
-		case AppshellChannel_Class:
-			name = "GFA_3";
-			break;
 	}
 
 	if (!name)

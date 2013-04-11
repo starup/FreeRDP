@@ -52,8 +52,6 @@ JNIEXPORT jstring JNICALL jni_freerdp_get_version(JNIEnv *env, jclass cls);
 //vpass jni_freerdp_setVpassInfo
 JNIEXPORT void jni_freerdp_setVpassInfo(JNIEnv *env, jclass cls, jint instance, jstring resId,
 		jstring commandLine, jstring rdpHostName, jint rdpHostPort, jint isVpn);
-JNIEXPORT void JNICALL jni_freerdp_startVirtualApp(JNIEnv *env, jclass cls, jint instance);
-
 
 #endif /* __ANDROID_FREERDP_H */
 

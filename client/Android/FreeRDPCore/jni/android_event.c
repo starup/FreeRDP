@@ -137,11 +137,6 @@ int android_process_event(ANDROID_EVENT_QUEUE * queue, freerdp * inst)
 			inst->input->MouseEvent(inst->input, cursor_event->flags, cursor_event->x, cursor_event->y);
 			android_event_cursor_free(cursor_event);
 		}
-		else if (event->type == EVENT_TYPE_APPSHELL)
-		{
-			ANDROID_EVENT_CURSOR* cursor_event = (ANDROID_EVENT_CURSOR*) event;
-
-		}
 		else if (event->type == EVENT_TYPE_DISCONNECT)
 		{
 			android_event_disconnect_free(event);
@@ -237,25 +232,6 @@ ANDROID_EVENT_CURSOR* android_event_cursor_new(UINT16 flags, UINT16 x, UINT16 y)
 }
 
 void android_event_cursor_free(ANDROID_EVENT_CURSOR* event)
-{
-	if (event != NULL)
-		free(event);
-}
-
-ANDROID_EVENT_CURSOR* android_event_appshell_new(const char* commandLine)
-{
-	ANDROID_EVENT_APPSHELL* event;
-
-	event = (ANDROID_EVENT_APPSHELL*) malloc(sizeof(ANDROID_EVENT_APPSHELL));
-	memset(event, 0, sizeof(ANDROID_EVENT_APPSHELL));
-
-	event->type = EVENT_TYPE_APPSHELL;
-	event->cmdLine = commandLine;
-
-	return event;
-}
-
-void android_event_appshell_free(ANDROID_EVENT_APPSHELL* event)
 {
 	if (event != NULL)
 		free(event);

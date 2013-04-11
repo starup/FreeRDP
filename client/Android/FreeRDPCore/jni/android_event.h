@@ -17,9 +17,6 @@
 #define EVENT_TYPE_CURSOR		2
 #define EVENT_TYPE_DISCONNECT		3
 #define EVENT_TYPE_KEY_UNICODE		4
-//vpass event
-#define EVENT_TYPE_APPSHELL		5
-
 
 struct _ANDROID_EVENT
 {
@@ -43,16 +40,6 @@ struct _ANDROID_EVENT_CURSOR
 	UINT16 y;
 };
 typedef struct _ANDROID_EVENT_CURSOR ANDROID_EVENT_CURSOR;
-
-struct _ANDROID_EVENT_APPSHELL
-{
-	int type;
-	UINT16 flags;
-	UINT16 x;
-	UINT16 y;
-	char *cmdLine;
-};
-typedef struct _ANDROID_EVENT_APPSHELL ANDROID_EVENT_APPSHELL;
 
 struct _ANDROID_EVENT_QUEUE
 {

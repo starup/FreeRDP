@@ -50,8 +50,6 @@ public class LibFreeRDP
 	
 	//vpass native set info
 	private static native void setVpassInfo(int inst, String resId, String commandLine, String rdpHostName, int rdpHostPort, int isVpn);
-	public static native void startVirtualApp(int inst);
-	
 	
 	private static final String TAG = "LibFreeRDP";
 
