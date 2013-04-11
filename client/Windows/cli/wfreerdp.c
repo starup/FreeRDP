@@ -47,11 +47,11 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	int status;
 	wfInfo* wfi;
 
-	freerdp_client_global_init();
+	wf_global_init();
 
-	wfi = freerdp_client_new(__argc, __argv);
+	wfi = wf_new(hInstance, NULL, __argc, __argv);
 
-	status = freerdp_client_start(wfi);
+	status = wf_start(wfi);
 
 	if (status < 0)
 	{
@@ -64,7 +64,7 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		WaitForSingleObject(wfi->thread, INFINITE);
 	}
 
-	freerdp_client_free(wfi);
+	wf_free(wfi);
 
 	return 0;
 }

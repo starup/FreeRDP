@@ -23,12 +23,7 @@
 #include <winpr/winpr.h>
 #include <winpr/wtypes.h>
 
-#include <winpr/spec.h>
 #include <winpr/handle.h>
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 #ifndef _WIN32
 
@@ -110,7 +105,7 @@ WINPR_API BOOL CreateProcessAsUserW(HANDLE hToken, LPCWSTR lpApplicationName, LP
 #define CreateProcessAsUser	CreateProcessAsUserA
 #endif
 
-DECLSPEC_NORETURN WINPR_API VOID ExitProcess(UINT uExitCode);
+WINPR_API VOID ExitProcess(UINT uExitCode);
 
 WINPR_API HANDLE _GetCurrentProcess(void);
 WINPR_API DWORD GetCurrentProcessId(void);
@@ -128,8 +123,7 @@ WINPR_API HANDLE CreateThread(LPSECURITY_ATTRIBUTES lpThreadAttributes, SIZE_T d
 WINPR_API HANDLE CreateRemoteThread(HANDLE hProcess, LPSECURITY_ATTRIBUTES lpThreadAttributes, SIZE_T dwStackSize,
 		LPTHREAD_START_ROUTINE lpStartAddress, LPVOID lpParameter, DWORD dwCreationFlags, LPDWORD lpThreadId);
 
-DECLSPEC_NORETURN WINPR_API VOID ExitThread(DWORD dwExitCode);
-WINPR_API BOOL GetExitCodeThread(HANDLE hThread, LPDWORD lpExitCode);
+WINPR_API VOID ExitThread(DWORD dwExitCode);
 
 WINPR_API HANDLE _GetCurrentThread(void);
 WINPR_API DWORD GetCurrentThreadId(void);
@@ -161,10 +155,6 @@ WINPR_API BOOL TlsFree(DWORD dwTlsIndex);
 #define _GetCurrentProcess	GetCurrentProcess
 #define _GetCurrentThread	GetCurrentThread
 
-#endif
-
-#ifdef __cplusplus
-}
 #endif
 
 #endif /* WINPR_THREAD_H */

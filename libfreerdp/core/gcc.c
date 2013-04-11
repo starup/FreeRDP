@@ -495,6 +495,7 @@ BOOL gcc_read_client_core_data(wStream* s, rdpSettings* settings, UINT16 blockLe
 	UINT16 postBeta2ColorDepth = 0;
 	UINT16 highColorDepth = 0;
 	UINT16 supportedColorDepths = 0;
+	UINT16 earlyCapabilityFlags = 0;
 	UINT32 serverSelectedProtocol = 0;
 
 	/* Length of all required fields, until imeFileName */
@@ -563,7 +564,7 @@ BOOL gcc_read_client_core_data(wStream* s, rdpSettings* settings, UINT16 blockLe
 
 		if (blockLength < 2)
 			break;
-		stream_read_UINT16(s, settings->EarlyCapabilityFlags); /* earlyCapabilityFlags */
+		stream_read_UINT16(s, earlyCapabilityFlags); /* earlyCapabilityFlags */
 		blockLength -= 2;
 
 		if (blockLength < 64)
@@ -596,7 +597,7 @@ BOOL gcc_read_client_core_data(wStream* s, rdpSettings* settings, UINT16 blockLe
 
 	if (highColorDepth > 0)
 	{
-		if (settings->EarlyCapabilityFlags & RNS_UD_CS_WANT_32BPP_SESSION)
+		if (earlyCapabilityFlags & RNS_UD_CS_WANT_32BPP_SESSION)
 			color_depth = 32;
 		else
 			color_depth = highColorDepth;

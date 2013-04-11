@@ -31,7 +31,6 @@ typedef void *(*pthread_start_routine)(void*);
 struct winpr_thread
 {
 	BOOL started;
-	DWORD dwExitCode;
 	pthread_t thread;
 	SIZE_T dwStackSize;
 	LPVOID lpParameter;

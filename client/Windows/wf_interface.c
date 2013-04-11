@@ -305,7 +305,6 @@ BOOL wf_post_connect(freerdp* instance)
 {
 	rdpGdi* gdi;
 	wfInfo* wfi;
-	DWORD dwStyle;
 	rdpCache* cache;
 	wfContext* context;
 	WCHAR lpWindowName[64];
@@ -367,15 +366,10 @@ BOOL wf_post_connect(freerdp* instance)
 	else
 		_snwprintf(lpWindowName, ARRAYSIZE(lpWindowName), L"FreeRDP: %S:%d", settings->ServerHostname, settings->ServerPort);
 
-	if (!settings->Decorations)
-		dwStyle = WS_CHILD | WS_BORDER;
-	else
-		dwStyle = 0;
-
 	if (!wfi->hwnd)
 	{
-		wfi->hwnd = CreateWindowEx((DWORD) NULL, wfi->wndClassName, lpWindowName, dwStyle,
-			0, 0, 0, 0, wfi->hWndParent, NULL, wfi->hInstance, NULL);
+		wfi->hwnd = CreateWindowEx((DWORD) NULL, wfi->wndClassName, lpWindowName,
+			0, 0, 0, 0, 0, wfi->hWndParent, NULL, wfi->hInstance, NULL);
 
 		SetWindowLongPtr(wfi->hwnd, GWLP_USERDATA, (LONG_PTR) wfi);
 	}
@@ -685,7 +679,7 @@ DWORD WINAPI wf_keyboard_thread(LPVOID lpParam)
 	return (DWORD) NULL;
 }
 
-int freerdp_client_global_init()
+int wf_global_init()
 {
 	WSADATA wsaData;
 
@@ -711,21 +705,20 @@ int freerdp_client_global_init()
 	return 0;
 }
 
-int freerdp_client_global_uninit()
+int wf_global_uninit()
 {
 	WSACleanup();
 
 	return 0;
 }
 
-wfInfo* freerdp_client_new(int argc, char** argv)
+wfInfo* wf_new(HINSTANCE hInstance, HWND hWndParent, int argc, char** argv)
 {
-	int index;
 	wfInfo* wfi;
 	freerdp* instance;
-	HINSTANCE hInstance;
 
-	hInstance = GetModuleHandle(NULL);
+	if (!hInstance)
+		hInstance = GetModuleHandle(NULL);
 
 	instance = freerdp_new();
 	instance->PreConnect = wf_pre_connect;
@@ -740,21 +733,12 @@ wfInfo* freerdp_client_new(int argc, char** argv)
 	freerdp_context_new(instance);
 
 	wfi = ((wfContext*) (instance->context))->wfi;
-
 	wfi->instance = instance;
-	wfi->client = instance->context->client;
 
 	instance->context->argc = argc;
 	instance->context->argv = argv;
 
-	instance->context->argv = (char**) malloc(sizeof(char*) * argc);
-
-	for (index = 0; index < argc; index++)
-	{
-		instance->context->argv[index] = _strdup(argv[index]);
-	}
-
-	wfi->hWndParent = NULL;
+	wfi->hWndParent = hWndParent;
 	wfi->hInstance = hInstance;
 	wfi->cursor = LoadCursor(NULL, IDC_ARROW);
 	wfi->icon = LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_ICON1));
@@ -777,7 +761,7 @@ wfInfo* freerdp_client_new(int argc, char** argv)
 	return wfi;
 }
 
-int freerdp_client_start(wfInfo* wfi)
+int wf_start(wfInfo* wfi)
 {
 	int status;
 	freerdp* instance = wfi->instance;
@@ -799,12 +783,12 @@ int freerdp_client_start(wfInfo* wfi)
 	return 0;
 }
 
-int freerdp_client_stop(wfInfo* wfi)
+int wf_stop(wfInfo* wfi)
 {
 	return 0;
 }
 
-int freerdp_client_free(wfInfo* wfi)
+int wf_free(wfInfo* wfi)
 {
 	freerdp* instance = wfi->instance;
 

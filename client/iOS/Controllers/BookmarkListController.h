@@ -14,7 +14,7 @@
 #import "BookmarkEditorController.h"
 #import "Reachability.h"
 
-@interface BookmarkListController : UIViewController <UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource, BookmarkEditorDelegate>
+@interface BookmarkListController : UIViewController <UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource, UIAlertViewDelegate, BookmarkEditorDelegate>
 {	
 	// custom bookmark and session table cells
 	BookmarkTableCell* _bmTableCell;

@@ -125,23 +125,7 @@ HANDLE CreateRemoteThread(HANDLE hProcess, LPSECURITY_ATTRIBUTES lpThreadAttribu
 
 VOID ExitThread(DWORD dwExitCode)
 {
-	pthread_exit((void*) (size_t) dwExitCode);
-}
-
-BOOL GetExitCodeThread(HANDLE hThread, LPDWORD lpExitCode)
-{
-	ULONG Type;
-	PVOID Object;
-	WINPR_THREAD* thread;
-
-	if (!winpr_Handle_GetInfo(hThread, &Type, &Object))
-		return FALSE;
-
-	thread = (WINPR_THREAD*) Object;
-
-	*lpExitCode = thread->dwExitCode;
-
-	return TRUE;
+	pthread_exit((void*) dwExitCode);
 }
 
 HANDLE _GetCurrentThread(VOID)

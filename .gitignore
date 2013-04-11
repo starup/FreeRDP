@@ -1,9 +1,10 @@
 #vpass
-.svn
+.svn/
 client/Android/aVirtualApp
 client/vpush
 channels/appshell
 include/freerdp/client/appshell.h
+.csettings/
 # CMake
 CMakeFiles/
 CMakeScripts/
@@ -99,3 +100,4 @@ default.log
 
 *.cbp
 *.txt.user
+

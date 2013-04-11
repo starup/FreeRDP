@@ -21,8 +21,6 @@ set(MODULE_PREFIX "FREERDP_CHANNELS_CLIENT")
 set(${MODULE_PREFIX}_SRCS
 	tables.c
 	tables.h
-	addin.c
-	addin.h
 	channels.c)
 
 list(REMOVE_DUPLICATES CHANNEL_STATIC_CLIENT_ENTRIES)

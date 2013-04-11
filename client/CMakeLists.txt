@@ -52,7 +52,3 @@ if(ANDROID)
 	add_subdirectory(vpush)
 endif()
 
-if(WITH_WAYK)
-	add_subdirectory(WaykClient)
-endif()
-
