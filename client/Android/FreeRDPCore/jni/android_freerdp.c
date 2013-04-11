@@ -34,6 +34,41 @@
 #include "android_jni_callback.h"
 #include "android_debug.h"
 
+//vpass
+JNIEXPORT void jni_freerdp_setVpassInfo(JNIEnv *env, jclass cls, jint instance, jstring resId,
+		jstring commandLine, jstring rdpHostName, jint rdpHostPort, jint isVpn)
+{
+	freerdp* inst = (freerdp*)instance;
+	rdpSettings * settings = inst->settings;
+	settings->isVpn = isVpn;
+
+	const jbyte *csResId = (*env)->GetStringUTFChars(env, resId, NULL );
+	settings->resId = strdup(csResId);
+	(*env)->ReleaseStringUTFChars(env, resId, csResId);
+
+	const jbyte *csCommandLine = (*env)->GetStringUTFChars(env, commandLine, NULL );
+	settings->commandLine = strdup(csCommandLine);
+	(*env)->ReleaseStringUTFChars(env, commandLine, csCommandLine);
+
+	if (isVpn)
+	{
+		const jbyte *csRdpHostName = (*env)->GetStringUTFChars(env, rdpHostName, NULL );
+		settings->rdpHostname = strdup(csRdpHostName);
+		settings->rdpHostPort = rdpHostPort;
+		(*env)->ReleaseStringUTFChars(env, rdpHostName, csRdpHostName);
+	}
+}
+
+JNIEXPORT void JNICALL jni_freerdp_startVirtualApp(JNIEnv *env, jclass cls, jint instance)
+{
+	RDP_APPSHELL_START_APP_EVENT* event;
+	freerdp* inst = (freerdp*)instance;
+	event = (RDP_APPSHELL_START_APP_EVENT*) freerdp_event_new(AppshellChannel_Class,
+			AppshellChannel_StartApp, NULL, NULL);
+//	android_push_event(inst, event);
+	freerdp_channels_send_event(inst->context->channels, (wMessage*) event);
+}
+
 struct thread_data
 {
 	freerdp* instance;
@@ -842,40 +877,5 @@ JNIEXPORT void JNICALL jni_freerdp_send_cursor_event(
 JNIEXPORT jstring JNICALL jni_freerdp_get_version(JNIEnv *env, jclass cls)
 {
 	return (*env)->NewStringUTF(env, GIT_REVISION);
-}
-
-//vpass
-JNIEXPORT void jni_freerdp_setVpassInfo(JNIEnv *env, jclass cls, jint instance, jstring resId,
-		jstring commandLine, jstring rdpHostName, jint rdpHostPort, jint isVpn)
-{
-	freerdp* inst = (freerdp*)instance;
-	rdpSettings * settings = inst->settings;
-	settings->isVpn = isVpn;
-
-	const jbyte *csResId = (*env)->GetStringUTFChars(env, resId, NULL );
-	settings->resId = strdup(csResId);
-	(*env)->ReleaseStringUTFChars(env, resId, csResId);
-
-	const jbyte *csCommandLine = (*env)->GetStringUTFChars(env, commandLine, NULL );
-	settings->commandLine = strdup(csCommandLine);
-	(*env)->ReleaseStringUTFChars(env, commandLine, csCommandLine);
-
-	if (isVpn)
-	{
-		const jbyte *csRdpHostName = (*env)->GetStringUTFChars(env, rdpHostName, NULL );
-		settings->rdpHostname = strdup(csRdpHostName);
-		settings->rdpHostPort = rdpHostPort;
-		(*env)->ReleaseStringUTFChars(env, rdpHostName, csRdpHostName);
-	}
-}
-
-JNIEXPORT void JNICALL jni_freerdp_startVirtualApp(JNIEnv *env, jclass cls, jint instance)
-{
-	RDP_APPSHELL_START_APP_EVENT* event;
-	freerdp* inst = (freerdp*)instance;
-	event = (RDP_APPSHELL_START_APP_EVENT*) freerdp_event_new(AppshellChannel_Class,
-			AppshellChannel_StartApp, NULL, NULL);
-//	android_push_event(inst, event);
-	freerdp_channels_send_event(inst->context->channels, (wMessage*) event);
 }
 

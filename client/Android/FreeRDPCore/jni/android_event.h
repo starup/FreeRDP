@@ -35,6 +35,16 @@ struct _ANDROID_EVENT_KEY
 };
 typedef struct _ANDROID_EVENT_KEY ANDROID_EVENT_KEY;
 
+struct _ANDROID_EVENT_APPSHELL
+{
+	int type;
+	UINT16 flags;
+	UINT16 x;
+	UINT16 y;
+	const char *cmdLine;
+};
+typedef struct _ANDROID_EVENT_APPSHELL ANDROID_EVENT_APPSHELL;
+
 struct _ANDROID_EVENT_CURSOR
 {
 	int type;
@@ -43,16 +53,6 @@ struct _ANDROID_EVENT_CURSOR
 	UINT16 y;
 };
 typedef struct _ANDROID_EVENT_CURSOR ANDROID_EVENT_CURSOR;
-
-struct _ANDROID_EVENT_APPSHELL
-{
-	int type;
-	UINT16 flags;
-	UINT16 x;
-	UINT16 y;
-	char *cmdLine;
-};
-typedef struct _ANDROID_EVENT_APPSHELL ANDROID_EVENT_APPSHELL;
 
 struct _ANDROID_EVENT_QUEUE
 {

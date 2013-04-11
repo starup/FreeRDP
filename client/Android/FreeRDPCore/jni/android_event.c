@@ -139,7 +139,7 @@ int android_process_event(ANDROID_EVENT_QUEUE * queue, freerdp * inst)
 		}
 		else if (event->type == EVENT_TYPE_APPSHELL)
 		{
-			ANDROID_EVENT_CURSOR* cursor_event = (ANDROID_EVENT_CURSOR*) event;
+
 
 		}
 		else if (event->type == EVENT_TYPE_DISCONNECT)
@@ -180,6 +180,26 @@ BOOL android_check_fds(freerdp * inst)
 	}
 
 	return TRUE;
+}
+
+//vpass appshell event
+ANDROID_EVENT_APPSHELL* android_event_appshell_new(const char* commandLine)
+{
+	ANDROID_EVENT_APPSHELL* event;
+
+	event = (ANDROID_EVENT_APPSHELL*) malloc(sizeof(ANDROID_EVENT_APPSHELL));
+	memset(event, 0, sizeof(ANDROID_EVENT_APPSHELL));
+
+	event->type = EVENT_TYPE_APPSHELL;
+	event->cmdLine = commandLine;
+
+	return event;
+}
+
+void android_event_appshell_free(ANDROID_EVENT_APPSHELL* event)
+{
+	if (event != NULL)
+		free(event);
 }
 
 ANDROID_EVENT_KEY* android_event_key_new(int flags, UINT16 scancode)
@@ -237,25 +257,6 @@ ANDROID_EVENT_CURSOR* android_event_cursor_new(UINT16 flags, UINT16 x, UINT16 y)
 }
 
 void android_event_cursor_free(ANDROID_EVENT_CURSOR* event)
-{
-	if (event != NULL)
-		free(event);
-}
-
-ANDROID_EVENT_CURSOR* android_event_appshell_new(const char* commandLine)
-{
-	ANDROID_EVENT_APPSHELL* event;
-
-	event = (ANDROID_EVENT_APPSHELL*) malloc(sizeof(ANDROID_EVENT_APPSHELL));
-	memset(event, 0, sizeof(ANDROID_EVENT_APPSHELL));
-
-	event->type = EVENT_TYPE_APPSHELL;
-	event->cmdLine = commandLine;
-
-	return event;
-}
-
-void android_event_appshell_free(ANDROID_EVENT_APPSHELL* event)
 {
 	if (event != NULL)
 		free(event);

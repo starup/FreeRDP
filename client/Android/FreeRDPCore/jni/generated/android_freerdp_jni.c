@@ -20,6 +20,17 @@
 #include "android_freerdp.h"
 #include "android_freerdp_jni.h"
 
+//vpass jni
+JNIEXPORT void JNICALL Java_com_freerdp_freerdpcore_services_LibFreeRDP_setVpassInfo(JNIEnv *env, jclass cls, jint instance, jstring resId, jstring commandLine, jstring rdpHostName, jint rdpHostPort, jint isVpn)
+{
+	return jni_freerdp_setVpassInfo(env, cls, instance, resId, commandLine, rdpHostName, rdpHostPort, isVpn);
+}
+
+JNIEXPORT void JNICALL Java_com_freerdp_freerdpcore_services_LibFreeRDP_startVirtualApp(JNIEnv *env, jclass cls, jint instance)
+{
+	return jni_freerdp_startVirtualApp(env, cls, instance);
+}
+
 JNIEXPORT jint JNICALL Java_com_freerdp_freerdpcore_services_LibFreeRDP_freerdp_1new(JNIEnv *env, jclass cls)
 {
 	return jni_freerdp_new(env, cls);
@@ -97,14 +108,4 @@ JNIEXPORT void JNICALL Java_com_freerdp_freerdpcore_services_LibFreeRDP_freerdp_
 JNIEXPORT jstring JNICALL Java_com_freerdp_freerdpcore_services_LibFreeRDP_freerdp_1get_1version(JNIEnv *env, jclass cls)
 {
 	return jni_freerdp_get_version(env, cls);
-}
-
-JNIEXPORT void JNICALL Java_com_freerdp_freerdpcore_services_LibFreeRDP_setVpassInfo(JNIEnv *env, jclass cls, jint instance, jstring resId, jstring commandLine, jstring rdpHostName, jint rdpHostPort, jint isVpn)
-{
-	return jni_freerdp_setVpassInfo(env, cls, instance, resId, commandLine, rdpHostName, rdpHostPort, isVpn);
-}
-
-JNIEXPORT void JNICALL Java_com_freerdp_freerdpcore_services_LibFreeRDP_startVirtualApp(JNIEnv *env, jclass cls, jint instance)
-{
-	return jni_freerdp_startVirtualApp(env, cls, instance);
 }
