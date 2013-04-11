@@ -1,3 +1,9 @@
+#vpass
+.svn
+client/Android/aVirtualApp
+client/vpush
+channels/appshell
+include/freerdp/client/appshell.h
 # CMake
 CMakeFiles/
 CMakeScripts/
@@ -91,9 +97,5 @@ default.log
 *Amplifier XE*
 *Inspector XE*
 
-.svn
-client/Android/aVirtualApp
-client/vpush
-channels/appshell
-
-include/freerdp/client/appshell.h
+*.cbp
+*.txt.user

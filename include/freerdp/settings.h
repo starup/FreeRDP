@@ -483,7 +483,7 @@ typedef struct _RDPDR_PARALLEL RDPDR_PARALLEL;
 #define FreeRDP_ClientBuild					133
 #define FreeRDP_ClientHostname					134
 #define FreeRDP_ClientProductId					135
-#define FreeRDP_EarlyCapabilitiesFlag				136
+#define FreeRDP_EarlyCapabilityFlags				136
 #define FreeRDP_NetworkAutoDetect				137
 #define FreeRDP_SupportAsymetricKeys				138
 #define FreeRDP_SupportErrorInfoPdu				139
@@ -689,6 +689,7 @@ typedef struct _RDPDR_PARALLEL RDPDR_PARALLEL;
 #define FreeRDP_RemoteFxCodecId					3650
 #define FreeRDP_RemoteFxCodecMode				3651
 #define FreeRDP_RemoteFxImageCodec				3652
+#define FreeRDP_RemoteFxCaptureFlags				3653
 #define FreeRDP_NSCodec						3712
 #define FreeRDP_NSCodecId					3713
 #define FreeRDP_FrameAcknowledge				3714
@@ -762,7 +763,7 @@ struct rdp_settings
 	ALIGN64 UINT32 ClientBuild; /* 133 */
 	ALIGN64 char* ClientHostname; /* 134 */
 	ALIGN64 char* ClientProductId; /* 135 */
-	ALIGN64 UINT32 EarlyCapabilitiesFlag; /* 136 */
+	ALIGN64 UINT32 EarlyCapabilityFlags; /* 136 */
 	ALIGN64 BOOL NetworkAutoDetect; /* 137 */
 	ALIGN64 BOOL SupportAsymetricKeys; /* 138 */
 	ALIGN64 BOOL SupportErrorInfoPdu; /* 139 */
@@ -1155,7 +1156,8 @@ struct rdp_settings
 	ALIGN64 UINT32 RemoteFxCodecId; /* 3650 */
 	ALIGN64 UINT32 RemoteFxCodecMode; /* 3651 */
 	ALIGN64 BOOL RemoteFxImageCodec; /* 3652 */
-	UINT64 padding3712[3712 - 3653]; /* 3653 */
+	ALIGN64 UINT32 RemoteFxCaptureFlags; /* 3653 */
+	UINT64 padding3712[3712 - 3654]; /* 3654 */
 
 	/* NSCodec */
 	ALIGN64 BOOL NSCodec; /* 3712 */
@@ -1299,6 +1301,9 @@ FREERDP_API int freerdp_set_param_bool(rdpSettings* settings, int id, BOOL param
 
 FREERDP_API UINT32 freerdp_get_param_uint32(rdpSettings* settings, int id);
 FREERDP_API int freerdp_set_param_uint32(rdpSettings* settings, int id, UINT32 param);
+
+FREERDP_API UINT64 freerdp_get_param_uint64(rdpSettings* settings, int id);
+FREERDP_API int freerdp_set_param_uint64(rdpSettings* settings, int id, UINT64 param);
 
 FREERDP_API char* freerdp_get_param_string(rdpSettings* settings, int id);
 FREERDP_API int freerdp_set_param_string(rdpSettings* settings, int id, char* param);
