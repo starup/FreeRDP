@@ -19,6 +19,10 @@ import android.graphics.Bitmap;
 
 public class LibFreeRDP
 {
+	//vpass native method
+	private static native void setVpassInfo(int inst, String resId, String commandLine, String rdpHostName, int rdpHostPort, int isVpn);
+	public static native void startVirtualApp(int inst);
+	
 	private static native int freerdp_new();
 	private static native void freerdp_free(int inst);
 	private static native boolean freerdp_connect(int inst);
@@ -48,9 +52,6 @@ public class LibFreeRDP
 
 	private static native String freerdp_get_version();
 	
-	//vpass native set info
-	private static native void setVpassInfo(int inst, String resId, String commandLine, String rdpHostName, int rdpHostPort, int isVpn);
-	public static native void startVirtualApp(int inst);
 	
 	
 	private static final String TAG = "LibFreeRDP";
