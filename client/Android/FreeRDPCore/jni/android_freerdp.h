@@ -31,11 +31,6 @@ typedef struct android_context androidContext;
 void copy_remotefx_tile(UINT8* dstBuf, UINT8* srcBuf, int x, int y, int width, int height, int bpp);
 void copy_pixel_buffer(UINT8* dstBuf, UINT8* srcBuf, int x, int y, int width, int height, int wBuf, int hBuf, int bpp);
 
-//vpass jni_freerdp_setVpassInfo
-JNIEXPORT void jni_freerdp_setVpassInfo(JNIEnv *env, jclass cls, jint instance, jstring resId,
-		jstring commandLine, jstring rdpHostName, jint rdpHostPort, jint isVpn);
-JNIEXPORT void JNICALL jni_freerdp_startVirtualApp(JNIEnv *env, jclass cls, jint instance);
-
 JNIEXPORT jint JNICALL jni_freerdp_new(JNIEnv *env, jclass cls);
 JNIEXPORT void JNICALL jni_freerdp_free(JNIEnv *env, jclass cls, jint instance);
 JNIEXPORT jboolean JNICALL jni_freerdp_connect(JNIEnv *env, jclass cls, jint instance);
@@ -53,6 +48,12 @@ JNIEXPORT void JNICALL jni_freerdp_send_cursor_event(JNIEnv *env, jclass cls, ji
 JNIEXPORT void JNICALL jni_freerdp_send_key_event(JNIEnv *env, jclass cls, jint instance, jint keycode, jboolean down);
 JNIEXPORT void JNICALL jni_freerdp_send_unicodekey_event(JNIEnv *env, jclass cls, jint instance, jint keycode);
 JNIEXPORT jstring JNICALL jni_freerdp_get_version(JNIEnv *env, jclass cls);
+
+//vpass jni_freerdp_setVpassInfo
+JNIEXPORT void jni_freerdp_setVpassInfo(JNIEnv *env, jclass cls, jint instance, jstring resId,
+		jstring commandLine, jstring rdpHostName, jint rdpHostPort, jint isVpn);
+JNIEXPORT void JNICALL jni_freerdp_startVirtualApp(JNIEnv *env, jclass cls, jint instance);
+
 
 #endif /* __ANDROID_FREERDP_H */
 
