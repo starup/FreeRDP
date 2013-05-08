@@ -129,8 +129,6 @@ BOOL android_pre_connect(freerdp* instance)
 
 	rdpSettings* settings = instance->settings;
 	BOOL bitmap_cache = settings->BitmapCacheEnabled;
-    settings->CompressionEnabled = TRUE;
-
 	settings->OrderSupport[NEG_DSTBLT_INDEX] = TRUE;
 	settings->OrderSupport[NEG_PATBLT_INDEX] = TRUE;
 	settings->OrderSupport[NEG_SCRBLT_INDEX] = TRUE;
@@ -163,8 +161,6 @@ BOOL android_pre_connect(freerdp* instance)
     freerdp_channels_load_plugin(instance->context->channels, instance->settings, "appshell", instance->settings);
 
 	freerdp_channels_pre_connect(instance->context->channels, instance);
-
-	printf("android_pre_connect!\n");
 
 	return TRUE;
 }
@@ -482,7 +478,6 @@ void* android_thread_func(void* param)
 	free(data);
 
 	pthread_detach(pthread_self());
-
 
 	return NULL;
 }

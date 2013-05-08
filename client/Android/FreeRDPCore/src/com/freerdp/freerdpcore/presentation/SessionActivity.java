@@ -256,7 +256,6 @@ public class SessionActivity extends Activity
 			if (!connectCancelledByUser)
 				uiHandler.sendMessage(Message.obtain(null, UIHandler.DISPLAY_TOAST, getResources().getText(R.string.error_connection_failure)));
 			
-			session = null;
 			closeSessionActivity(RESULT_CANCELED);
 		}
 
@@ -271,7 +270,6 @@ public class SessionActivity extends Activity
 			}
 			
 			session.setUIEventListener(null);
-			session = null;
 			closeSessionActivity(RESULT_OK);
 		}
 	}
@@ -288,8 +286,8 @@ public class SessionActivity extends Activity
 
 	private Bitmap bitmap;
 	protected SessionState session;
-	private SessionView sessionView;
-	private TouchPointerView touchPointerView;
+	protected SessionView sessionView;
+	protected TouchPointerView touchPointerView;
 	private ProgressDialog progressDialog;
 	private KeyboardView keyboardView;
 	private KeyboardView modifiersKeyboardView;
@@ -312,7 +310,7 @@ public class SessionActivity extends Activity
 	
 	private boolean autoScrollTouchPointer = GlobalSettings.getAutoScrollTouchPointer();
 	private boolean connectCancelledByUser = false;
-	private boolean sessionRunning = false;
+	protected boolean sessionRunning = false;
 	private boolean toggleMouseButtons = false;
 
 	private LibFreeRDPBroadcastReceiver libFreeRDPBroadcastReceiver;
@@ -322,8 +320,8 @@ public class SessionActivity extends Activity
 	private ScrollView2D scrollView;
 
 	// keyboard visibility flags
-	private boolean sysKeyboardVisible = false;
-	private boolean extKeyboardVisible = false;
+	protected boolean sysKeyboardVisible = false;
+	protected boolean extKeyboardVisible = false;
 
 	// variables for delayed move event sending
 	private static final int MAX_DISCARDED_MOVE_EVENTS = 3;
@@ -518,9 +516,13 @@ public class SessionActivity extends Activity
 	protected void onDestroy() {
 		super.onDestroy();
 		Log.v(TAG, "Session.onDestroy");
-
+		
 		// unregister freerdp events broadcast receiver
 		unregisterReceiver(libFreeRDPBroadcastReceiver);
+		
+		// free session
+		GlobalApp.freeSession(session.getInstance());
+		session = null;
 	}
 		
 	@Override
@@ -637,7 +639,7 @@ public class SessionActivity extends Activity
 	}
 
 	// displays either the system or the extended keyboard or non of  them 
-	private void showKeyboard(boolean showSystemKeyboard, boolean showExtendedKeyboard) {
+	protected void showKeyboard(boolean showSystemKeyboard, boolean showExtendedKeyboard) {
 		// no matter what we are doing ... hide the zoom controls
 		// TODO: this is not working correctly as hiding the keyboard issues a onScrollChange notification showing the control again ...
 		uiHandler.removeMessages(UIHandler.HIDE_ZOOMCONTROLS);

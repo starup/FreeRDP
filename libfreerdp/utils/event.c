@@ -29,10 +29,11 @@
 
 #include <freerdp/message.h>
 #include <freerdp/utils/event.h>
+#include <freerdp/client/appshell.h>//vpass mod
 #include <freerdp/client/cliprdr.h>
 #include <freerdp/client/tsmf.h>
 #include <freerdp/rail.h>
-#include <freerdp/client/appshell.h>
+
 
 static wMessage* freerdp_cliprdr_event_new(UINT16 event_type)
 {
@@ -62,6 +63,23 @@ static wMessage* freerdp_cliprdr_event_new(UINT16 event_type)
 			event = (wMessage*) malloc(sizeof(RDP_CB_DATA_RESPONSE_EVENT));
 			ZeroMemory(event, sizeof(RDP_CB_DATA_RESPONSE_EVENT));
 			event->id = MakeMessageId(CliprdrChannel, DataResponse);
+			break;
+	}
+
+	return event;
+}
+
+//vpass freerdp_appshell_event_new
+static wMessage* freerdp_appshell_event_new(UINT16 event_type)
+{
+	wMessage* event = NULL;
+
+	switch (event_type)
+	{
+		case AppshellChannel_StartApp:
+			event = (wMessage*) malloc(sizeof(RDP_APPSHELL_START_APP_EVENT));
+			ZeroMemory(event, sizeof(RDP_APPSHELL_START_APP_EVENT));
+			event->id = MakeMessageId(AppshellChannel, StartApp);
 			break;
 	}
 
@@ -98,21 +116,6 @@ static wMessage* freerdp_rail_event_new(UINT16 event_type)
 	return event;
 }
 
-static wMessage* freerdp_appshell_event_new(UINT16 event_type)
-{
-	wMessage* event = NULL;
-
-	switch (event_type)
-	{
-		case AppshellChannel_StartApp:
-			event = (wMessage*) malloc(sizeof(RDP_APPSHELL_START_APP_EVENT));
-			ZeroMemory(event, sizeof(RDP_APPSHELL_START_APP_EVENT));
-			event->id = MakeMessageId(AppshellChannel, StartApp);
-			break;
-	}
-
-	return event;
-}
 
 
 wMessage* freerdp_event_new(UINT16 event_class, UINT16 event_type,
@@ -122,6 +125,9 @@ wMessage* freerdp_event_new(UINT16 event_class, UINT16 event_type,
 
 	switch (event_class)
 	{
+		case AppshellChannel_Class://vpass AppshellChannel_Class
+			event = freerdp_appshell_event_new(event_type);
+			break;
 		case DebugChannel_Class:
 			event = (wMessage*) malloc(sizeof(wMessage));
 			ZeroMemory(event, sizeof(wMessage));
@@ -137,9 +143,6 @@ wMessage* freerdp_event_new(UINT16 event_class, UINT16 event_type,
 
 		case RailChannel_Class:
 			event = freerdp_rail_event_new(event_type);
-			break;
-		case AppshellChannel_Class:
-			event = freerdp_appshell_event_new(event_type);
 			break;
 	}
 

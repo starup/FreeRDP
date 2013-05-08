@@ -52,8 +52,6 @@ public class LibFreeRDP
 
 	private static native String freerdp_get_version();
 	
-	
-	
 	private static final String TAG = "LibFreeRDP";
 
 	public static interface EventListener

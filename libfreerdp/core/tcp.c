@@ -115,11 +115,11 @@ void tcp_get_mac_address(rdpTcp * tcp)
 		mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]); */
 }
 
-
 BOOL tcp_connect(rdpTcp* tcp, const char* hostname, UINT16 port)
 {
 	UINT32 option_value;
 	socklen_t option_len;
+
 	if (hostname[0] == '/')
 	{
 		tcp->sockfd = freerdp_uds_connect(hostname);
