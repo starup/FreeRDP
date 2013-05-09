@@ -59,6 +59,7 @@ JNIEXPORT void jni_freerdp_setVpassInfo(JNIEnv *env, jclass cls, jint instance, 
 	}
 }
 
+//vpass jni method
 JNIEXPORT void JNICALL jni_freerdp_startVirtualApp(JNIEnv *env, jclass cls, jint instance)
 {
 	RDP_APPSHELL_START_APP_EVENT* event;

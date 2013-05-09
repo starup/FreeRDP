@@ -125,6 +125,11 @@ int android_process_event(ANDROID_EVENT_QUEUE * queue, freerdp * inst)
 			inst->input->KeyboardEvent(inst->input, key_event->flags, key_event->scancode);
 			android_event_key_free(key_event);
 		}
+		else if (event->type == EVENT_TYPE_APPSHELL)//vpass EVENT_TYPE_APPSHELL
+		{
+			ANDROID_EVENT_CURSOR* cursor_event = (ANDROID_EVENT_CURSOR*) event;
+
+		}
 		else if (event->type == EVENT_TYPE_KEY_UNICODE)
 		{
 			ANDROID_EVENT_KEY* key_event = (ANDROID_EVENT_KEY*) event;
@@ -136,11 +141,6 @@ int android_process_event(ANDROID_EVENT_QUEUE * queue, freerdp * inst)
 			ANDROID_EVENT_CURSOR* cursor_event = (ANDROID_EVENT_CURSOR*) event;
 			inst->input->MouseEvent(inst->input, cursor_event->flags, cursor_event->x, cursor_event->y);
 			android_event_cursor_free(cursor_event);
-		}
-		else if (event->type == EVENT_TYPE_APPSHELL)
-		{
-			ANDROID_EVENT_CURSOR* cursor_event = (ANDROID_EVENT_CURSOR*) event;
-
 		}
 		else if (event->type == EVENT_TYPE_DISCONNECT)
 		{

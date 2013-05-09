@@ -14,11 +14,12 @@
 #include <freerdp/freerdp.h>
 
 #define EVENT_TYPE_KEY			1
+//vpass appshell event
+#define EVENT_TYPE_APPSHELL		100
 #define EVENT_TYPE_CURSOR		2
 #define EVENT_TYPE_DISCONNECT		3
 #define EVENT_TYPE_KEY_UNICODE		4
-//vpass event
-#define EVENT_TYPE_APPSHELL		5
+
 
 
 struct _ANDROID_EVENT
@@ -35,15 +36,7 @@ struct _ANDROID_EVENT_KEY
 };
 typedef struct _ANDROID_EVENT_KEY ANDROID_EVENT_KEY;
 
-struct _ANDROID_EVENT_CURSOR
-{
-	int type;
-	UINT16 flags;
-	UINT16 x;
-	UINT16 y;
-};
-typedef struct _ANDROID_EVENT_CURSOR ANDROID_EVENT_CURSOR;
-
+//vpass  _ANDROID_EVENT_APPSHELL
 struct _ANDROID_EVENT_APPSHELL
 {
 	int type;
@@ -53,6 +46,15 @@ struct _ANDROID_EVENT_APPSHELL
 	char *cmdLine;
 };
 typedef struct _ANDROID_EVENT_APPSHELL ANDROID_EVENT_APPSHELL;
+
+struct _ANDROID_EVENT_CURSOR
+{
+	int type;
+	UINT16 flags;
+	UINT16 x;
+	UINT16 y;
+};
+typedef struct _ANDROID_EVENT_CURSOR ANDROID_EVENT_CURSOR;
 
 struct _ANDROID_EVENT_QUEUE
 {
