@@ -611,7 +611,7 @@ public class SessionActivity extends Activity
 		progressDialog = new ProgressDialog(this);
 		progressDialog.setTitle(bookmark.getLabel());
 		progressDialog.setMessage(getResources().getText(R.string.dlg_msg_connecting));
-		progressDialog.setButton(ProgressDialog.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
+		progressDialog.setButton(ProgressDialog.BUTTON_NEGATIVE, getText(R.string.cancel), new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				connectCancelledByUser = true;
